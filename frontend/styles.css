@@ -1,0 +1,63 @@
+:root{
+  --bg:#0b0b12; --bg2:#14141f; --card:#1a1a28; --line:#2a2a3d;
+  --txt:#f2f2f7; --dim:#a8a8bd; --acc:#8b5cf6; --acc2:#3b82f6;
+  --good:#22c55e; --bad:#ef4444; --warn:#f59e0b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1c1440 0%,var(--bg) 60%);
+  color:var(--txt);font-family:"Noto Sans Myanmar","Pyidaungsu",system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{margin:.4em 0}
+.auth-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:16px}
+.auth-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;width:100%;max-width:380px;text-align:center;box-shadow:0 0 40px #8b5cf633}
+.auth-card h1{font-size:2em;margin:0}
+.tagline{color:var(--dim);margin:.2em 0 1em}
+input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+  border-radius:10px;padding:10px 12px;margin:6px 0;font-size:15px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc)}
+.btn{background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;
+  padding:10px 16px;margin:6px 4px;cursor:pointer;font-size:15px;font-family:inherit;transition:.15s}
+.btn:hover{border-color:var(--acc)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;font-weight:700;
+  box-shadow:0 0 18px #8b5cf655}
+.btn.big{width:100%;padding:16px;font-size:18px;margin:12px 0}
+.btn.small{padding:6px 10px;font-size:13px;margin:2px}
+.btn:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:8px;margin:12px 0}
+.tab{flex:1;background:transparent;border:1px solid var(--line);color:var(--dim);border-radius:10px;padding:10px;cursor:pointer;font-family:inherit;font-size:14px}
+.tab.active{background:var(--card);color:var(--txt);border-color:var(--acc)}
+.err{color:var(--bad);min-height:1.2em}
+.warn{background:#f59e0b22;border:1px solid var(--warn);border-radius:10px;padding:10px;margin:8px 0;font-size:14px}
+.hint{color:var(--dim);font-size:13px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;
+  background:#0e0e18ee;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;flex-wrap:wrap}
+.logo{font-weight:800;font-size:20px}.logo span{color:var(--acc);font-weight:400;font-size:14px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+.navbtn{background:transparent;border:1px solid transparent;color:var(--dim);border-radius:10px;padding:8px 14px;cursor:pointer;font-family:inherit;font-size:14px}
+.navbtn.active{color:var(--txt);border-color:var(--acc);background:var(--card)}
+.userbox{display:flex;align-items:center;gap:8px;font-size:14px}
+.view{padding:16px;max-width:1200px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.row{display:flex;gap:8px}.row input{flex:1}
+.pv-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.pv-grid{grid-template-columns:1fr}}
+video{width:100%;border-radius:12px;background:#000;max-height:60vh}
+.meta-card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;display:flex;gap:10px;align-items:center}
+.meta-card img{width:120px;border-radius:8px}
+.progress{background:var(--bg2);border:1px solid var(--line);border-radius:10px;height:22px;overflow:hidden;margin:8px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s}
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.seg-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{color:var(--dim);font-weight:600}
+td input,td textarea{margin:0;padding:6px 8px;font-size:13px}
+td textarea{width:180px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.switch{display:flex;align-items:center;gap:8px;margin:8px 0}
+.switch input{width:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+label{font-size:14px;color:var(--dim);display:block;margin:4px 0}
+label input,label select,label textarea{color:var(--txt)}
+#job-stage{margin:.2em 0}

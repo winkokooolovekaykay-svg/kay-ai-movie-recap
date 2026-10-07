@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎬 KAY AI Movie Recap</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div id="auth-view" class="auth-wrap">
+  <div class="auth-card">
+    <h1>🎬 KAY AI</h1>
+    <p class="tagline">Movie Recap Studio</p>
+    <div class="tabs">
+      <button id="tab-login" class="tab active" onclick="showAuthTab('login')">Login</button>
+      <button id="tab-register" class="tab" onclick="showAuthTab('register')">Register</button>
+    </div>
+    <div id="auth-login">
+      <input id="login-user" placeholder="Username" autocomplete="username">
+      <input id="login-pass" type="password" placeholder="Password" autocomplete="current-password">
+      <button class="btn primary" onclick="doLogin()">အကောင့်ဝင်ရန်</button>
+    </div>
+    <div id="auth-register" style="display:none">
+      <input id="reg-user" placeholder="Username (≥၃ လုံး)">
+      <input id="reg-pass" type="password" placeholder="Password (≥၆ လုံး)">
+      <button class="btn primary" onclick="doRegister()">အကောင့်ဖွင့်ရန်</button>
+    </div>
+    <p id="auth-err" class="err"></p>
+  </div>
+</div>
+
+<div id="app-view" style="display:none">
+  <header>
+    <div class="logo">🎬 KAY AI <span>Movie Recap</span></div>
+    <nav>
+      <button class="navbtn active" data-nav="create" onclick="nav('create')">ဖန်တီးရန်</button>
+      <button class="navbtn" data-nav="projects" onclick="nav('projects')">Projects</button>
+      <button class="navbtn" data-nav="voice" onclick="nav('voice')">Voice Studio</button>
+      <button class="navbtn" data-nav="admin" id="nav-admin" style="display:none" onclick="nav('admin')">Admin</button>
+    </nav>
+    <div class="userbox">
+      <span id="credits">💰 -</span>
+      <span id="username"></span>
+      <button class="btn small" onclick="doLogout()">ထွက်ရန်</button>
+    </div>
+  </header>
+
+  <!-- CREATE -->
+  <section id="view-create" class="view">
+    <div id="no-project">
+      <h2>🎬 Recap အသစ်ဖန်တီးရန်</h2>
+      <div class="tabs">
+        <button class="tab active" data-itab="youtube" onclick="itab('youtube')">YouTube URL</button>
+        <button class="tab" data-itab="rednote" onclick="itab('rednote')">RedNote URL</button>
+        <button class="tab" data-itab="upload" onclick="itab('upload')">Upload Video</button>
+      </div>
+      <div id="itab-youtube" class="itab">
+        <div class="row">
+          <input id="yt-url" placeholder="https://youtube.com/watch?v=...">
+          <button class="btn" onclick="ytMeta()">စစ်ဆေးရန်</button>
+        </div>
+        <div id="yt-meta" class="meta-card" style="display:none"></div>
+        <button class="btn primary" id="yt-import" style="display:none" onclick="ytImport()">📥 Import Video</button>
+      </div>
+      <div id="itab-rednote" class="itab" style="display:none">
+        <div class="row">
+          <input id="rn-url" placeholder="https://www.xiaohongshu.com/...">
+          <button class="btn primary" onclick="rnImport()">📥 Import Video</button>
+        </div>
+        <p class="hint">တိုက်ရိုက်မရရင် video download လုပ်ပြီး Upload tab နဲ့ထည့်ပါ။</p>
+      </div>
+      <div id="itab-upload" class="itab" style="display:none">
+        <input type="file" id="upload-file" accept="video/*,.mkv,.avi">
+        <button class="btn primary" onclick="doUpload()">📤 တင်ရန်</button>
+        <div id="upload-prog" class="progress" style="display:none"><div class="bar"></div></div>
+        <p class="hint">MP4 / MOV / MKV / WEBM / AVI — <span id="max-mb"></span>MB အထိ</p>
+      </div>
+      <p id="ingest-err" class="err"></p>
+    </div>
+
+    <div id="project-view" style="display:none">
+      <div class="pv-grid">
+        <div class="pv-left">
+          <video id="preview" controls playsinline></video>
+          <div id="analysis" class="card"></div>
+          <div class="card">
+            <h3>🎙️ မူရင်းအသံ</h3>
+            <label class="switch"><input type="checkbox" id="set-orig-on"> <span>မူရင်းအသံဖွင့်ထားရန်</span></label>
+            <label>အသံအတိုးအကျယ် <input type="range" id="set-orig-vol" min="0" max="100" value="15"> <span id="orig-vol-v">15%</span></label>
+          </div>
+          <div class="card">
+            <h3>🧱 စာတန်းဖုံးရန် (embedded subtitle)</h3>
+            <label class="switch"><input type="checkbox" id="set-mask-on"> <span>မူရင်းစာတန်းနေရာဖုံးရန်</span></label>
+            <div class="grid2">
+              <label>X <input type="number" id="mask-x" value="0"></label>
+              <label>Y <input type="number" id="mask-y" value="0"></label>
+              <label>W <input type="number" id="mask-w" value="0"></label>
+              <label>H <input type="number" id="mask-h" value="0"></label>
+            </div>
+            <label>နည်း
+              <select id="set-mask-type"><option value="blur">Blur</option><option value="solid">အနက်ရောင်ဖုံး</option></select>
+            </label>
+            <p class="hint">အလိုအလျောက်ခန့်မှန်းဧရိယာ ဖြည့်ထားမယ် — လိုအပ်ရင်ပြင်ပါ။</p>
+          </div>
+        </div>
+        <div class="pv-right">
+          <div class="card">
+            <h3>⚙️ AI ဆက်တင်များ</h3>
+            <label>မုဒ်
+              <select id="set-mode"></select>
+            </label>
+            <label>မူရင်းဘာသာ
+              <select id="set-lang">
+                <option value="auto">Auto Detect</option><option>Chinese</option><option>English</option>
+                <option>Korean</option><option>Japanese</option><option>Thai</option>
+                <option>Vietnamese</option><option>Malay</option><option>Hindi</option>
+              </select>
+            </label>
+            <label>မြန်မာအသံ
+              <select id="set-voice"><option value="">—</option></select>
+            </label>
+            <div id="tts-warn" class="warn" style="display:none"></div>
+            <div class="grid2">
+              <label>အမြန်နှုန်း
+                <select id="set-speed"><option>0.75</option><option>0.85</option><option selected>1.0</option><option>1.1</option><option>1.25</option></select>
+              </label>
+              <label>အသံအနိမ့်အမြင့်
+                <select id="set-pitch"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select>
+              </label>
+            </div>
+            <div class="grid2">
+              <label>စာတန်းစတိုင်
+                <select id="set-substyle">
+                  <option value="clean">Clean</option><option value="cinema">Cinema</option>
+                  <option value="youtube">YouTube</option><option value="tiktok">TikTok</option>
+                  <option value="minimal">Minimal</option>
+                </select>
+              </label>
+              <label>စာတန်းနေရာ
+                <select id="set-subpos"><option value="bottom">အောက်</option><option value="middle">အလယ်</option><option value="top">အပေါ်</option></select>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <h3>🎙️ ကိုယ်တိုင်အသံဖိုင် (Narration MP3)</h3>
+            <p class="hint">Lovevoice လို app နဲ့ ကိုယ်တိုင်လုပ်ထားတဲ့ မြန်မာအသံ MP3 ကို ဒီမှာတင်ပါ။ တင်ထားရင် pipeline က ဒီအသံကို voiceover အဖြစ် တိုက်ရိုက်သုံးပါမယ် — Google TTS key မလိုတော့ပါ။</p>
+            <div id="narr-status" class="hint"></div>
+            <div class="row">
+              <input type="file" id="narr-file" accept="audio/*,.mp3,.wav,.m4a,.ogg">
+              <button class="btn" onclick="uploadNarration()">📤 တင်ရန်</button>
+            </div>
+            <button class="btn small" id="narr-del" style="display:none" onclick="removeNarration()">🗑 ဖျက်ရန်</button>
+            <p id="narr-err" class="err"></p>
+          </div>
+          <div class="card">
+            <h3>📤 Export ဆက်တင်</h3>
+            <div class="grid2">
+              <label>Resolution
+                <select id="set-preset"><option value="original">မူရင်း</option><option value="1080p">1080p</option><option value="720p">720p</option><option value="480p">480p</option></select>
+              </label>
+              <label>FPS
+                <select id="set-fps"><option value="original">မူရင်း</option><option value="30">30</option><option value="60">60</option></select>
+              </label>
+              <label>Aspect
+                <select id="set-aspect"><option value="original">မူရင်း</option><option value="16:9">16:9 YouTube</option><option value="9:16">9:16 TikTok/Shorts</option><option value="1:1">1:1</option></select>
+              </label>
+              <label>Quality
+                <select id="set-quality"><option value="fast">Fast</option><option value="balanced" selected>Balanced</option><option value="high">High</option><option value="maximum">Maximum</option></select>
+              </label>
+            </div>
+          </div>
+          <button class="btn primary big" id="run-btn" onclick="runPipeline()">✨ CREATE BURMESE MOVIE RECAP</button>
+          <div id="job-box" class="card" style="display:none">
+            <h3 id="job-stage">...</h3>
+            <div class="progress"><div class="bar" id="job-bar"></div></div>
+            <p id="job-err" class="err"></p>
+            <button class="btn" id="resume-btn" style="display:none" onclick="resumeJob()">🔄 Resume Processing</button>
+          </div>
+          <div id="dl-box" class="card" style="display:none">
+            <h3>🎬 အပြီးသတ်ဗီဒီယို</h3>
+            <div class="dl-grid">
+              <button class="btn" onclick="dl('video')">⬇ ဗီဒီယို</button>
+              <button class="btn" onclick="dl('audio')">⬇ အသံသာ</button>
+              <button class="btn" onclick="dl('srt')">⬇ SRT</button>
+              <button class="btn" onclick="dl('script')">⬇ Script</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seg-head">
+          <h3>📝 စာသားတည်းဖြတ်ရန် (Timeline Editor)</h3>
+          <div>
+            <button class="btn small" onclick="autoFix()">🔧 Auto Sync</button>
+            <button class="btn small" onclick="addSegment()">➕ ထည့်ရန်</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="seg-table">
+          <thead><tr><th>#</th><th>စ (s)</th><th>ဆုံး (s)</th><th>မူရင်း</th><th>မြန်မာ</th><th>အသံစာသား</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="view-projects" class="view" style="display:none">
+    <h2>📁 Projects</h2>
+    <div id="proj-list" class="cards"></div>
+  </section>
+
+  <!-- VOICE STUDIO -->
+  <section id="view-voice" class="view" style="display:none">
+    <h2>🎙️ Voice Studio</h2>
+    <div class="card">
+      <div id="voice-list-warn" class="warn" style="display:none"></div>
+      <label>အသံရွေးရန် <select id="vs-voice"></select></label>
+      <label>နမူနာစာသား <textarea id="vs-text" rows="3">ဒီနေ့ပြောပြမယ့်ဇာတ်လမ်းကတော့...</textarea></label>
+      <div class="grid2">
+        <label>အမြန်နှုန်း <select id="vs-speed"><option>0.75</option><option>0.85</option><option selected>1.0</option><option>1.1</option><option>1.25</option></select></label>
+        <label>Pitch <select id="vs-pitch"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
+      </div>
+      <button class="btn primary" onclick="voicePreview()">▶ Preview</button>
+      <audio id="vs-audio" controls style="display:none"></audio>
+      <p id="vs-err" class="err"></p>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="view-admin" class="view" style="display:none">
+    <h2>🛠️ Admin Panel</h2>
+    <div class="card"><h3>👥 Users</h3><div class="table-wrap"><table id="admin-users"><thead><tr><th>ID</th><th>Username</th><th>Credits</th><th>Admin</th><th></th></tr></thead><tbody></tbody></table></div></div>
+    <div class="card"><h3>📋 Jobs</h3><div class="table-wrap"><table id="admin-jobs"><thead><tr><th>ID</th><th>User</th><th>Stage</th><th>Status</th><th>Progress</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="card"><h3>⚠️ Errors</h3><div id="admin-errors"></div></div>
+    <div class="card"><h3>🔑 API Keys</h3>
+      <p class="hint">Google AI Studio / Google Cloud က ရတဲ့ key တွေကို ဒီမှာထည့်ပါ။ Server ထဲမှာပဲ သိမ်းထားပြီး ပြန်ပြမပေးပါ (လုံခြုံရေး)။ ဖျက်ချင်ရင် အကွက်ကို ရှင်းပြီး သိမ်းပါ။</p>
+      <div id="api-keys-status" class="hint"></div>
+      <div class="grid2">
+        <label>Gemini API Key (ဘာသာပြန် + recap + စကားပြောစာသားထုတ်)
+          <input id="key-gemini" type="password" placeholder="AIza..." autocomplete="off"></label>
+        <label>Google Cloud TTS API Key (မြန်မာအသံ my-MM)
+          <input id="key-tts" type="password" placeholder="AIza..." autocomplete="off"></label>
+      </div>
+      <p><button class="btn primary" onclick="saveApiKeys()">🔑 Key များ သိမ်းရန်</button></p>
+    </div>
+    <div class="card"><h3>⚙️ Settings</h3><div id="admin-settings" class="grid2"></div>
+      <button class="btn primary" onclick="saveAdminSettings()">သိမ်းရန်</button></div>
+  </section>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

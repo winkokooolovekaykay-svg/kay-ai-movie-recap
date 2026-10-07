@@ -1,0 +1,18 @@
+# Render.com blueprint — one-click deploy of KAY AI Movie Recap (free tier).
+services:
+  - type: web
+    name: kay-ai-movie-recap
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false # you set this in the Render dashboard when deploying
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash
+      - key: MAX_UPLOAD_SIZE_MB
+        value: 200
+      - key: MAX_VIDEO_DURATION_MIN
+        value: 30
