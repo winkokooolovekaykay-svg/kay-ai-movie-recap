@@ -1,9 +1,8 @@
-"""Ingest: file upload, YouTube import, RedNote import (graceful fallback)."""
+"""Ingest: file upload only (URL import removed for hosting AUP compliance)."""
 from __future__ import annotations
 import os
 import uuid
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from pydantic import BaseModel
 from .. import db
 from ..config import UPLOAD_DIR, THUMB_DIR, settings
 from ..deps import get_current_user
@@ -12,9 +11,6 @@ from ..services import analyze as analyze_svc
 from ..services import audio as audio_svc
 
 router = APIRouter(prefix="/api/ingest", tags=["ingest"])
-
-REDNOTE_FALLBACK = ("ဒီ Link ကို တိုက်ရိုက် Download မလုပ်နိုင်ပါ။ "
-                    "Video ကို Download လုပ်ပြီး Upload Video နဲ့ထည့်နိုင်ပါတယ်။")
 
 
 def _create_project(user_id: int, name: str, source_type: str, source_url: str,
@@ -68,66 +64,3 @@ async def upload_video(file: UploadFile = File(...),
         if os.path.exists(dest):
             os.unlink(dest)
         raise HTTPException(400, f"ဗီဒီယိုဖိုင်ဖတ်၍မရပါ: {e}")
-
-
-class URLBody(BaseModel):
-    url: str
-
-
-@router.post("/youtube/meta")
-def youtube_meta(body: URLBody, user: dict = Depends(get_current_user)):
-    url = body.url.strip()
-    if not ing.YOUTUBE_RE.search(url):
-        raise HTTPException(400, "YouTube link မဟုတ်ပါ")
-    try:
-        return ing.youtube_metadata(url)
-    except RuntimeError as e:
-        raise HTTPException(400, str(e))
-
-
-@router.post("/youtube/import")
-def youtube_import(body: URLBody, user: dict = Depends(get_current_user)):
-    url = body.url.strip()
-    if not ing.YOUTUBE_RE.search(url):
-        raise HTTPException(400, "YouTube link မဟုတ်ပါ")
-    max_mb = int(db.get_setting("max_upload_mb", str(settings.MAX_UPLOAD_SIZE_MB)))
-    try:
-        meta = ing.youtube_metadata(url)
-    except RuntimeError as e:
-        raise HTTPException(400, str(e))
-    try:
-        path = ing.download_video(url, str(UPLOAD_DIR), max_mb)
-    except RuntimeError as e:
-        raise HTTPException(400, str(e))
-    try:
-        return _create_project(user["id"], meta.get("title") or "YouTube video",
-                               "youtube", url, path)
-    except HTTPException:
-        raise
-    except Exception as e:
-        if os.path.exists(path):
-            os.unlink(path)
-        raise HTTPException(400, f"ဗီဒီယိုဖိုင်ဖတ်၍မရပါ: {e}")
-
-
-@router.post("/rednote/import")
-def rednote_import(body: URLBody, user: dict = Depends(get_current_user)):
-    url = body.url.strip()
-    try:
-        ing.check_rednote(url)
-    except ValueError as e:
-        raise HTTPException(400, str(e))
-    max_mb = int(db.get_setting("max_upload_mb", str(settings.MAX_UPLOAD_SIZE_MB)))
-    try:
-        path = ing.download_video(url, str(UPLOAD_DIR), max_mb)
-    except Exception:
-        # Spec: graceful Burmese fallback, never crash
-        raise HTTPException(400, REDNOTE_FALLBACK)
-    try:
-        return _create_project(user["id"], "RedNote video", "rednote", url, path)
-    except HTTPException:
-        raise
-    except Exception:
-        if os.path.exists(path):
-            os.unlink(path)
-        raise HTTPException(400, REDNOTE_FALLBACK)

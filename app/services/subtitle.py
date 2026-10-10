@@ -10,7 +10,7 @@ STYLES = {
                     back="&H00000000", border=1, ol=2, sh=1, bold=0, align=2, mv=45),
     "cinema":  dict(size=52, color="&H00FFFFFF", outline_c="&HCC000000",
                     back="&H00000000", border=1, ol=1, sh=2, bold=0, align=2, mv=50),
-    "youtube": dict(size=60, color="&H00FFFFFF", outline_c="&HFF000000",
+    "standard": dict(size=60, color="&H00FFFFFF", outline_c="&HFF000000",
                     back="&H99000000", border=3, ol=2, sh=0, bold=-1, align=2, mv=40),
     "tiktok":  dict(size=64, color="&H00FFFFFF", outline_c="&HFF101010",
                     back="&H00000000", border=1, ol=3, sh=2, bold=-1, align=2, mv=220),

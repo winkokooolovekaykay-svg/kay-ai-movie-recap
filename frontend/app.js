@@ -67,7 +67,7 @@ function nav(name) {
 }
 function itab(name) {
   document.querySelectorAll('[data-itab]').forEach(b => b.classList.toggle('active', b.dataset.itab === name));
-  ['youtube', 'rednote', 'upload'].forEach(t => $('itab-' + t).style.display = t === name ? '' : 'none');
+  ['upload'].forEach(t => $('itab-' + t).style.display = t === name ? '' : 'none');
 }
 
 /* ---------- boot ---------- */
@@ -100,31 +100,6 @@ async function loadVoices() {
 }
 
 /* ---------- ingest ---------- */
-async function ytMeta() {
-  try {
-    $('ingest-err').textContent = '';
-    const m = await api('/api/ingest/youtube/meta', { method: 'POST', body: JSON.stringify({ url: $('yt-url').value }) });
-    $('yt-meta').style.display = 'flex';
-    $('yt-meta').innerHTML = (m.thumbnail ? `<img src="${m.thumbnail}">` : '') +
-      `<div><b>${m.title || ''}</b><br><span class="hint">${m.channel || ''} · ${m.duration || ''}s</span></div>`;
-    $('yt-import').style.display = '';
-    $('yt-import').dataset.url = $('yt-url').value;
-  } catch (e) { err(e, 'ingest-err'); }
-}
-async function ytImport() {
-  try {
-    $('ingest-err').textContent = '';
-    const p = await api('/api/ingest/youtube/import', { method: 'POST', body: JSON.stringify({ url: $('yt-import').dataset.url }) });
-    openProject(p.id);
-  } catch (e) { err(e, 'ingest-err'); }
-}
-async function rnImport() {
-  try {
-    $('ingest-err').textContent = '';
-    const p = await api('/api/ingest/rednote/import', { method: 'POST', body: JSON.stringify({ url: $('rn-url').value }) });
-    openProject(p.id);
-  } catch (e) { err(e, 'ingest-err'); }
-}
 async function doUpload() {
   const f = $('upload-file').files[0];
   if (!f) { $('ingest-err').textContent = 'ဖိုင်ရွေးပါ'; return; }

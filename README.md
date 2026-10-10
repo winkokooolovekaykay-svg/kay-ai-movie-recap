@@ -6,7 +6,7 @@ short_description: Burmese AI movie recap & dubbing studio
 ---
 # 🎬 KAY AI Movie Recap
 
-YouTube / RedNote / Upload ဗီဒီယိုတွေကို **မြန်မာလို Movie Recap** အဖြစ်ပြောင်းပေးတဲ့ web app —
+Upload ဗီဒီယိုတွေကို **မြန်မာလို Movie Recap** အဖြစ်ပြောင်းပေးတဲ့ web app —
 မြန်မာစာတန်း + မြန်မာအသံ (dubbing) + နောက်ဆုံးဗီဒီယို export အထိ အလိုအလျောက်လုပ်ပေးပါတယ်။
 
 ## လိုအပ်ချက်များ
@@ -60,7 +60,7 @@ python -m app.main        # http://localhost:8000
 
 ## အသုံးပြုပုံ
 
-1. **ဖန်တီးရန်** tab → YouTube link / RedNote link / Upload (MP4/MOV/MKV/WEBM/AVI, 500MB)
+1. **ဖန်တီးရန်** tab → Upload (MP4/MOV/MKV/WEBM/AVI, 500MB)
 2. Video preview + analysis card ကြည့်မယ်
 3. Mode ရွေး: ဘာသာပြန်သာ / စာတန်းသာ / မြန်မာအသံသာ / အသံ+စာတန်း / Recap အပြည့် / Recap အတို
 4. အသံ၊ စာတန်းစတိုင်း (၅ မျိုး), export setting (TikTok 9:16 အပါအဝင်) ရွေး
@@ -100,4 +100,3 @@ subtitle_overlay → rendering → finalizing
 - **Burmese TTS** က Google Cloud API key မရှိရင် အလုပ်မလုပ်ဘူး — အတုမထုတ်ဘူး
 - **STT** က faster-whisper (သို့) Gemini key လိုတယ်
 - **Embedded subtitle detection** က heuristic (အောက်ပိုင်း band ခန့်မှန်း) + လက်နဲ့ပြင်နိုင်တယ်; AI inpainting မပါဘူး (blur/အနက်ဖုံး သုံးတယ်)
-- YouTube/RedNote download က platform ခွင့်ပြုမှရမယ်; မရရင် မြန်မာလို အသိပေးပြီး upload လမ်းကြောင်းပြပေးတယ်
