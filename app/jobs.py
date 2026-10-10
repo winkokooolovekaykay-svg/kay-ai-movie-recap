@@ -231,6 +231,7 @@ def _pipeline(job_id: int, project: dict, flags: dict):
                 finally:
                     c2.close()
             _save_segments(pid, segments)
+            segments = _get_segments(pid)  # re-fetch: fresh dicts lack DB ids
     elif flags["stt"] and not has_audio:
         raise ProviderUnavailable("ဗီဒီယိုမှာ အသံလမ်းကြောင်းမရှိပါ။")
     _set_stage(job_id, "transcribing", 100)

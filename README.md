@@ -1,3 +1,9 @@
+---
+sdk: docker
+app_port: 7860
+pinned: false
+short_description: Burmese AI movie recap & dubbing studio
+---
 # 🎬 KAY AI Movie Recap
 
 YouTube / RedNote / Upload ဗီဒီယိုတွေကို **မြန်မာလို Movie Recap** အဖြစ်ပြောင်းပေးတဲ့ web app —
