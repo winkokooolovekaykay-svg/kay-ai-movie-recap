@@ -129,14 +129,14 @@ def get_api_keys(admin: dict = Depends(get_admin_user)):
         "gemini": {
             "configured": bool(gk),
             "masked": mask_key(gk),
-            "source": ("app" if db.get_setting("gemini_api_key", "") else
-                       "env" if env_settings.GEMINI_API_KEY else "none"),
+            "source": ("env" if env_settings.GEMINI_API_KEY else
+                       "app" if db.get_setting("gemini_api_key", "") else "none"),
         },
         "google_tts": {
             "configured": bool(tk),
             "masked": mask_key(tk),
-            "source": ("app" if db.get_setting("google_tts_api_key", "") else
-                       "env" if env_settings.GOOGLE_TTS_API_KEY else "none"),
+            "source": ("env" if env_settings.GOOGLE_TTS_API_KEY else
+                       "app" if db.get_setting("google_tts_api_key", "") else "none"),
         },
     }
 
